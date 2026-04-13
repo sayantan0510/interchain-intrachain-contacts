@@ -1,0 +1,7 @@
+#============
+#Requirements
+#============
+Python ≥ 3.8
+MDAnalysis
+NumPy
+Matplotlib
