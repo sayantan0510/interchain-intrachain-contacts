@@ -1,11 +1,14 @@
-# Interchain and Intrachain Contact Analysis  
+# Interchain and Intrachain Contact Analysis (HOMOTYPIC System) 
 
 ---
 
 ## Overview
 
-This repository provides two Python tools to compute **interchain** and **intrachain** contacts in multi-chain single-component biomolecular systems from GROMACS trajectories (.xtc and .trr).
+This repository provides two Python tools to compute **interchain** and **intrachain** contacts in multi-chain **homotypic** biomolecular systems from GROMACS trajectories (.xtc and .trr).
 Contacts are defined using a **PLUMED-style switching function**, which provides a smooth and physically meaningful measure of contacts instead of a hard (Heaviside step function) cutoff.
+
+### Limitation
+This particular code is limited to homotypic systems. That means, if you have 100 chains of kind-A, the code can give you inter- and intra-chain contacts. However, if the system is heterotypic, for example, 100 chains of kind-A and 50 chains of kind-B, it cannot give you the interchain contacts between these two kinds. The heterotypic code is available at https://github.com/sayantan0510/interchain-contact-heterotypic
 
 The scripts support:
 
@@ -78,64 +81,12 @@ python scripts/inter_chain_contact.py --help
 Compute INTER-chain contacts from a GROMACS (.xtc or .trr) trajectory, write a global .dat file, optionally write chain-wise .csv, and make plots.this code assumes backbone bead names as
 BB and sidechains as SC1, SC2, SC3, ... Please change the bead name(s) directly inside the code (lines 123-128) if otherwise
 
-options: <br>
-  -h, --help            show this help message and exit <br>
-  -s STRUCTURE, --structure STRUCTURE <br>
-                        Topology file (.tpr, .gro, ...) <br>
-  -f TRAJECTORY, --trajectory TRAJECTORY 
-                        Trajectory file (.xtc, .trr, ...)  <br>
-  --out-prefix OUT_PREFIX <br>
-                        Prefix for all output files, e.g. interchain_bb <br>
-  --contact-mode {bb,bbsc} <br>
-                        bb = backbone only (BB); bbsc = backbone + sidechains (BB + SC*) <br>
-  --chain-by {molnum,fragment,auto,chainID,segid} <br>
-                        How to identify chains. For GROMACS proteins, molnum is usually best.<br>
-  --r0-nm R0_NM         R_0 in nm <br>
-  --nn NN               n exponent (default: 6) <br>
-  --mm MM               m exponent (default: 12) <br>
-  --tmin-ps TMIN_PS     Minimum time in ps to include <br>
-  --tmax-ps TMAX_PS     Maximum time in ps to include <br>
-  --stride STRIDE       Analyze every Nth selected frame <br>
-  --write-chainwise-csv
-                        Also write chain-wise interchain contacts divided by (Nchains - 1) <br>
-  --plot-chainwise-hists
-                        Also plot one histogram panel per chain <br>
-  --bins BINS           Number of bins for histograms (default: 50) <br>
-  --backend {serial,OpenMP,distopia} <br>
-                        MDAnalysis distance backend (default: serial) <br>
-  --verbose             Print progress information <br>
-
-
 ### INTRA-chain
 
 python scripts/intra_chain_contact.py --help<br>
 
 Compute intra-chain contacts from a GROMACS (.xtc or .trr) trajectory, excluding near-neighbor residue pairs, write a global .dat file, optionally write chain-wise .csv, and make
 plots.this code assumes backbone bead names as BB and sidechains as SC1, SC2, SC3, ...Please change the bead name(s) directly inside the code (lines 107-112) if otherwise
-
-options:
-  -h, --help            show this help message and exit<br>
-  -s STRUCTURE, --structure STRUCTURE Topology file (.tpr, .gro, ...)<br>
-  -f TRAJECTORY, --trajectory TRAJECTORY Trajectory file (.xtc, .trr, ...)<br>
-  --out-prefix OUT_PREFIX Prefix for all output files, e.g. intrachain_bb <br>
-  --contact-mode {bb,bbsc} bb = backbone only (BB); bbsc = backbone + sidechains (BB + SC*)<br>
-  --chain-by {molnum,fragment,auto,chainID,segid} <br>
-  --r0-nm R0_NM         PLUMED R_0 in nm <br>
-  --nn NN               PLUMED NN exponent (default: 6)<br>
-  --mm MM               PLUMED MM exponent (default: 12)<br>
-  --exclude-neighbors EXCLUDE_NEIGHBORS 
-                        Exclude atom pairs whose residues are within this sequence separation. Default: 3, meaning pairs with |i-j| <= 3 are ignored.<br>
-  --tmin-ps TMIN_PS     Minimum time in ps to include <br>
-  --tmax-ps TMAX_PS     Maximum time in ps to include <br>
-  --stride STRIDE       Analyze every Nth selected frame<br>
-  --write-chainwise-csv 
-                        Also write chain-wise intra-chain contacts as a CSV<br>
-  --plot-chainwise-hists 
-                        Also plot one histogram panel per chain<br>
-  --bins BINS           Number of histogram bins (default: 50)<br>
-  --backend {serial,OpenMP,distopia}<br>
-                        MDAnalysis distance backend (default: serial)<br>
-  --verbose             Print progress information<br>
 
 ---
 
