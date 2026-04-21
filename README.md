@@ -4,7 +4,7 @@
 
 ## Overview
 
-This repository provides two Python tools to compute **interchain** and **intrachain** contacts in multi-chain biomolecular systems from GROMACS trajectories.
+This repository provides two Python tools to compute **interchain** and **intrachain** contacts in multi-chain single-component biomolecular systems from GROMACS trajectories (.xtc and .trr).
 Contacts are defined using a **PLUMED-style switching function**, which provides a smooth and physically meaningful measure of contacts instead of a hard (Heaviside step function) cutoff.
 
 The scripts support:
@@ -24,7 +24,7 @@ The scripts support:
 
 Contacts are computed using:
 
-s(r) = (1 - (r/r0)^n) / (1 - (r/r0)^m)
+$s(r) = \frac{(1 - (r/r0)^n}{(1 - (r/r0)^m}$
 
 Default parameters:
 - n = 6
@@ -34,13 +34,13 @@ Default parameters:
 
 ### Interchain Contacts
 
-C(t) = (1 / Nchains) * sum_{i<j} C_ij(t)
+$C(t) = \frac{1}{N_{Chains}} * \sum_{i<j} C_{ij}(t)$
 
 ---
 
 ### Intrachain Contacts
 
-C_i(t) = sum over (a < b in chain i, |i - j| > k) of s(r_ab)
+$C_i(t) = \sum s(r_{ab})$, (a<b in chain i, |i - j| > k)
 
 where:
 - k is the residue exclusion (default = 3)
@@ -71,13 +71,9 @@ Run the provided example:
 
 ## Usage and Help options
 
-# INTER-chain
+### INTER-chain
 
 python scripts/inter_chain_contact.py --help
-
-usage: inter_chain_contact.py [-h] -s STRUCTURE -f TRAJECTORY --out-prefix OUT_PREFIX [--contact-mode {bb,bbsc}] [--chain-by {molnum,fragment,auto,chainID,segid}] --r0-nm R0_NM [--nn NN]
-                              [--mm MM] [--tmin-ps TMIN_PS] [--tmax-ps TMAX_PS] [--stride STRIDE] [--write-chainwise-csv] [--plot-chainwise-hists] [--bins BINS]
-                              [--backend {serial,OpenMP,distopia}] [--verbose]
 
 Compute INTER-chain contacts from a GROMACS (.xtc or .trr) trajectory, write a global .dat file, optionally write chain-wise .csv, and make plots.this code assumes backbone bead names as
 BB and sidechains as SC1, SC2, SC3, ... Please change the bead name(s) directly inside the code (lines 123-128) if otherwise
@@ -110,29 +106,20 @@ options: <br>
   --verbose             Print progress information <br>
 
 
-# INTRA-chain
+### INTRA-chain
 
 python scripts/intra_chain_contact.py --help<br>
-
-usage: intra_chain_contact.py [-h] -s STRUCTURE -f TRAJECTORY --out-prefix OUT_PREFIX [--contact-mode {bb,bbsc}] [--chain-by {molnum,fragment,auto,chainID,segid}] --r0-nm R0_NM [--nn NN]
-                              [--mm MM] [--exclude-neighbors EXCLUDE_NEIGHBORS] [--tmin-ps TMIN_PS] [--tmax-ps TMAX_PS] [--stride STRIDE] [--write-chainwise-csv] [--plot-chainwise-hists]
-                              [--bins BINS] [--backend {serial,OpenMP,distopia}] [--verbose]
 
 Compute intra-chain contacts from a GROMACS (.xtc or .trr) trajectory, excluding near-neighbor residue pairs, write a global .dat file, optionally write chain-wise .csv, and make
 plots.this code assumes backbone bead names as BB and sidechains as SC1, SC2, SC3, ...Please change the bead name(s) directly inside the code (lines 107-112) if otherwise
 
 options:
   -h, --help            show this help message and exit<br>
-  -s STRUCTURE, --structure STRUCTURE 
-                        Topology file (.tpr, .gro, ...)<br>
-  -f TRAJECTORY, --trajectory TRAJECTORY 
-                        Trajectory file (.xtc, .trr, ...)<br>
-  --out-prefix OUT_PREFIX 
-                        Prefix for all output files, e.g. intrachain_bb <br>
-  --contact-mode {bb,bbsc} 
-                        bb = backbone only (BB); bbsc = backbone + sidechains (BB + SC*)<br>
-  --chain-by {molnum,fragment,auto,chainID,segid} 
-                        How to identify chains. For GROMACS proteins, molnum is usually best.<br>
+  -s STRUCTURE, --structure STRUCTURE Topology file (.tpr, .gro, ...)<br>
+  -f TRAJECTORY, --trajectory TRAJECTORY Trajectory file (.xtc, .trr, ...)<br>
+  --out-prefix OUT_PREFIX Prefix for all output files, e.g. intrachain_bb <br>
+  --contact-mode {bb,bbsc} bb = backbone only (BB); bbsc = backbone + sidechains (BB + SC*)<br>
+  --chain-by {molnum,fragment,auto,chainID,segid} <br>
   --r0-nm R0_NM         PLUMED R_0 in nm <br>
   --nn NN               PLUMED NN exponent (default: 6)<br>
   --mm MM               PLUMED MM exponent (default: 12)<br>
